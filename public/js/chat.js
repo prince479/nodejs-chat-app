@@ -99,9 +99,6 @@ sendLocationButton.addEventListener('click', () => {
             sendLocationButton.removeAttribute('disabled')
             append("You Shared your location")
         })
-    },error=>{
-        sendLocationButton.removeAttribute('disabled')
-        return alert(`Make sure ! you have a internet connection:( \n ${error.message}`)
     })
 })
 
