@@ -48,7 +48,6 @@ const append= (message)=>{
 }
 
 socket.on('message', message => {
-    //console.log(msg)
     const html = Mustache.render(messageTemplate,{
         username:message.username,
         message:message.text,
@@ -62,7 +61,6 @@ socket.on('message', message => {
     autoscroll()
 })
 socket.on('locationMessage',message=>{
-    console.log(message)
     const html = Mustache.render(locationMessageTemplate,{
         username:message.username,
         url:message.url,
@@ -85,7 +83,6 @@ messageForm.addEventListener('submit', (e) => {
                 return alert(error) 
             }
             append(message)
-            console.log("THE Message Was Deleivered")
         })
 })
 
@@ -101,7 +98,6 @@ sendLocationButton.addEventListener('click', () => {
         },()=>{
             sendLocationButton.removeAttribute('disabled')
             append("You Shared your location")
-            console.log("Location Shared..")
         })
     },error=>{
         sendLocationButton.removeAttribute('disabled')
