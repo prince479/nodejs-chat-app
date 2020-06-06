@@ -11,6 +11,7 @@ const {addUser,getUser,userList,removeUser} = require('./utils/users')
 
 const app = express()
 const server = http.createServer(app)
+const port = process.env.PORT || 80
 
 const io = socketio(server)
 let message = ''
@@ -63,6 +64,6 @@ io.on('connection',(socket)=>{
 const publicDirectoryPath = path.join(__dirname,'../public')
 app.use(express.static(publicDirectoryPath))
 
-server.listen(80,'localhost',()=>{
+server.listen(port,()=>{
     console.log(" express server starts serving requests")
 })
