@@ -66,15 +66,3 @@ app.use(express.static(publicDirectoryPath))
 server.listen(80,'localhost',()=>{
     console.log(" express server starts serving requests")
 })
-
-// socket.on('clicked',()=>{
-    //     
-    // })
-    // socket.on('clicked',()=>{
-    //     count++;
-    //     io.emit('user-joined',count)
-    // })
-
-    //console.log(username,room)
-        // socket.emit io.emit ,socket.broadcast.emit
-        // io.to.emit, socket.broadcast.to.emit
