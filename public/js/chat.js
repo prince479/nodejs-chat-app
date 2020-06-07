@@ -101,7 +101,7 @@ sendLocationButton.addEventListener('click', () => {
         })
     },error=>{
         sendLocationButton.removeAttribute('disabled')
-            return alert(`Please allow http sites in your browser settings ${error}`)
+            return alert(`Please allow http sites in your browser settings ${error.message}`)
     })
 })
 
