@@ -6,8 +6,8 @@ const messageFormButton = messageForm.querySelector('button')
 const sendLocationButton = document.querySelector('#send-location')
 const messages = document.querySelector('#messages')
 const sidebar = document.querySelector('#sidebar')
-const openBtn = document.queryCommandEnabled('.openbtn') 
-const closeBtn = document.queryCommandEnabled('.closeBtn') 
+const openBtn = document.queryCommandEnabled('.openbtn')
+const closeBtn = document.queryCommandEnabled('.closeBtn')
 
 //templates
 
@@ -16,17 +16,17 @@ const locationMessageTemplate = document.querySelector('#location-message-templa
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 //Options
 const time = moment(new Date().getTime()).format('h:mm a')
-const {username,room} = Qs.parse(location.search,{ignoreQueryPrefix:true})
+const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
-const closeNav=()=>{
-    sidebar.style.width=0
+const closeNav = () => {
+    sidebar.style.width = 0
     $(".openbtn").removeAttr("hidden")
-    $(".closeBtn").prop("hidden",true)
+    $(".closeBtn").prop("hidden", true)
 }
-const openNav=()=>{
-    sidebar.style.width="225px";
-    $(".openbtn").prop("hidden",true)
-    $(".closeBtn").prop("hidden",false)
+const openNav = () => {
+    sidebar.style.width = "225px";
+    $(".openbtn").prop("hidden", true)
+    $(".closeBtn").prop("hidden", false)
 }
 
 const autoscroll = () => {
@@ -35,7 +35,7 @@ const autoscroll = () => {
 
 const audio = new Audio('../messenger.mp3')
 
-const append= (message)=>{
+const append = (message) => {
     const html = `
                 <div>
                     <p class="message right">${message}
@@ -43,51 +43,51 @@ const append= (message)=>{
                     </p>  
                 </div>
     `
-    messages.insertAdjacentHTML('beforeend',html)
-    autoscroll()  
+    messages.insertAdjacentHTML('beforeend', html)
+    autoscroll()
 }
 
 socket.on('message', message => {
-    const html = Mustache.render(messageTemplate,{
-        username:message.username,
-        message:message.text,
-        createdAt:moment(message.createdAt).format('h:mm a')
+    const html = Mustache.render(messageTemplate, {
+        username: message.username,
+        message: message.text,
+        createdAt: moment(message.createdAt).format('h:mm a')
     })
-    messages.insertAdjacentHTML('beforeend',html)
-    if(message.username!=='Admin'){
+    messages.insertAdjacentHTML('beforeend', html)
+    if (message.username !== 'Admin') {
         audio.play()
 
     }
     autoscroll()
 })
-socket.on('locationMessage',message=>{
-    const html = Mustache.render(locationMessageTemplate,{
-        username:message.username,
-        url:message.url,
+socket.on('locationMessage', message => {
+    const html = Mustache.render(locationMessageTemplate, {
+        username: message.username,
+        url: message.url,
         createdAt: moment(message.createdAt).format('h:mm a')
     })
-    messages.insertAdjacentHTML('beforeend',html)
+    messages.insertAdjacentHTML('beforeend', html)
     autoscroll()
 })
 
 messageForm.addEventListener('submit', (e) => {
     e.preventDefault()
-    messageFormButton.setAttribute('disabled','disabled')
+    messageFormButton.setAttribute('disabled', 'disabled')
     const message = e.target.elements.message.value
     if (message !== '')
         socket.emit('sendMessage', message, (error) => {
             messageFormButton.removeAttribute('disabled')
-            messageFormInput.value=''
+            messageFormInput.value = ''
             messageFormInput.focus()
             if (error) {
-                return alert(error) 
+                return alert(error)
             }
             append(message)
         })
 })
 
 sendLocationButton.addEventListener('click', () => {
-    sendLocationButton.setAttribute('disabled','disabled')
+    sendLocationButton.setAttribute('disabled', 'disabled')
     if (!navigator.geolocation) {
         return alert("Your browser does not support GEOLOCATION")
     }
@@ -95,24 +95,27 @@ sendLocationButton.addEventListener('click', () => {
         socket.emit('sendLocation', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
-        },()=>{
+        }, () => {
             sendLocationButton.removeAttribute('disabled')
             append("You Shared your location")
         })
+    },error=>{
+        sendLocationButton.removeAttribute('disabled')
+            return alert(`Please allow http sites in your browser settings ${error}`)
     })
 })
 
-socket.on('roomData',({room,users})=>{
-    const html = Mustache.render(sidebarTemplate,{
+socket.on('roomData', ({ room, users }) => {
+    const html = Mustache.render(sidebarTemplate, {
         room,
         users
     })
-    sidebar.innerHTML=html
+    sidebar.innerHTML = html
 
 })
-socket.emit('join',{username,room},(error)=>{
-    if(error){
+socket.emit('join', { username, room }, (error) => {
+    if (error) {
         alert(error)
-        location.href='/'
+        location.href = '/'
     }
 })
